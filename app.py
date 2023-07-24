@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(app)
 
-# Create User Model
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80), nullable=False)
@@ -38,23 +38,21 @@ def signin():
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        # Get form data from request
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
 
-        # Check if passwords match and they meet criteria
         if password != confirm_password:
             return "Passwords do not match. Please try again."
 
-        # Check if the email is not already used in the database
+       
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return "Email address already used. Please try a different email."
 
-        # If everything is okay, save the user data to the database
+      
         new_user = User(first_name=first_name, last_name=last_name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
@@ -65,8 +63,7 @@ def signup():
 
 @app.route('/secretpage')
 def secret_page():
-    # Implement code to check if the user is logged in
-    # For simplicity, we will assume that the user is logged in if they reach this page.
+    
     return render_template('secretPage.html')
 
 if __name__ == "__main__":
